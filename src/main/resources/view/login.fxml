@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.LoginController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
 
+    <children>
+        <VBox alignment="CENTER" layoutX="150" layoutY="60" prefHeight="280" prefWidth="300" spacing="15">
+
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Connexion" />
+
+            <TextField fx:id="usernameField" prefWidth="250" promptText="Identifiant" />
+
+            <PasswordField fx:id="passwordField" prefWidth="250" promptText="Mot de passe" />
+
+            <Button onAction="#handleLogin" prefWidth="150" text="Se connecter" />
+
+            <Hyperlink onAction="#handleCreateAccount" style="-fx-font-size: 12px;" text="Pas encore de compte ? Créer" />
+
+        </VBox>
+    </children>
 </AnchorPane>
