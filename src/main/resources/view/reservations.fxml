@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.ReservationController"
             prefHeight="400.0" prefWidth="600.0">
+
+    <Label text="Gestion des Réservations"
+           layoutX="180"
+           layoutY="20"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="tableReservations" layoutX="20" layoutY="70" prefWidth="560" prefHeight="250">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colUtilisateur" text="Utilisateur" prefWidth="150"/>
+            <TableColumn fx:id="colVehicule" text="Véhicule" prefWidth="150"/>
+            <TableColumn fx:id="colDateDebut" text="Date Début" prefWidth="100"/>
+            <TableColumn fx:id="colDateFin" text="Date Fin" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox layoutX="20" layoutY="330" spacing="10">
+        <Button text="Ajouter" fx:id="btnAjouter" prefWidth="100"/>
+        <Button text="Modifier" fx:id="btnModifier" prefWidth="100"/>
+        <Button text="Supprimer" fx:id="btnSupprimer" prefWidth="100"/>
+    </HBox>
 
 </AnchorPane>
