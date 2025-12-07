@@ -25,18 +25,19 @@
         <Button text="Déconnexion" fx:id="btnLogout" prefWidth="150" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
     </VBox>
 
+
     <HBox layoutX="200" layoutY="70" spacing="20">
         <VBox spacing="5" style="-fx-border-color: #3498db; -fx-border-width: 2; -fx-padding: 10;">
             <Label text="Véhicules disponibles" style="-fx-font-weight: bold;"/>
-            <Label text="12"/>
+            <Label fx:id="lblVehicules" text="12"/>
         </VBox>
         <VBox spacing="5" style="-fx-border-color: #2ecc71; -fx-border-width: 2; -fx-padding: 10;">
             <Label text="Réservations actives" style="-fx-font-weight: bold;"/>
-            <Label text="5"/>
+            <Label fx:id="lblReservations" text="5"/>
         </VBox>
         <VBox spacing="5" style="-fx-border-color: #f1c40f; -fx-border-width: 2; -fx-padding: 10;">
             <Label text="Utilisateurs inscrits" style="-fx-font-weight: bold;"/>
-            <Label text="20"/>
+            <Label fx:id="lblUsers" text="20"/>
         </VBox>
     </HBox>
 
