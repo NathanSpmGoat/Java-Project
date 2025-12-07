@@ -2,34 +2,40 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.VehiculeController"
             prefHeight="400.0" prefWidth="600.0">
 
+    <children>
 
-    <Label text="Gestion des Véhicules"
-           layoutX="220"
-           layoutY="20"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <Label text="Gestion des Véhicules"
+               layoutX="200"
+               layoutY="20"
+               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
+        <TableView fx:id="tableVehicules"
+                   layoutX="20" layoutY="70"
+                   prefWidth="560" prefHeight="250">
 
-    <TableView fx:id="tableVehicules" layoutX="20" layoutY="70" prefWidth="560" prefHeight="250">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="colMarque" text="Marque" prefWidth="150"/>
-            <TableColumn fx:id="colModele" text="Modèle" prefWidth="150"/>
-            <TableColumn fx:id="colAnnee" text="Année" prefWidth="100"/>
-            <TableColumn fx:id="colDisponibilite" text="Disponibilité" prefWidth="100"/>
-        </columns>
-    </TableView>
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colMarque" text="Marque" prefWidth="120"/>
+                <TableColumn fx:id="colModele" text="Modèle" prefWidth="120"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
+                <TableColumn fx:id="colPrixJournalier" text="Prix/jour (€)" prefWidth="100"/>
+                <TableColumn fx:id="colEtat" text="État" prefWidth="100"/>
+            </columns>
 
-    <HBox layoutX="20" layoutY="330" spacing="10">
-        <Button text="Ajouter" fx:id="btnAjouter" prefWidth="100"/>
-        <Button text="Modifier" fx:id="btnModifier" prefWidth="100"/>
-        <Button text="Supprimer" fx:id="btnSupprimer" prefWidth="100"/>
-    </HBox>
+        </TableView>
+
+        <HBox layoutX="20" layoutY="330" spacing="10">
+            <Button fx:id="btnAjouter" text="Ajouter" prefWidth="120"/>
+            <Button fx:id="btnModifier" text="Modifier" prefWidth="120"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="120" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </HBox>
+
+    </children>
 
 </AnchorPane>
