@@ -6,61 +6,42 @@ import javafx.scene.control.Label;
 
 public class DashboardController {
 
-    // Boutons de navigation
-    @FXML
-    private Button btnDashboard;
+    @FXML private Button btnDashboard;
+    @FXML private Button btnVehicules;
+    @FXML private Button btnReservations;
+    @FXML private Button btnUsers;
+    @FXML private Button btnLogout;
 
-    @FXML
-    private Button btnVehicules;
-
-    @FXML
-    private Button btnReservations;
-
-    @FXML
-    private Button btnUsers;
-
-    @FXML
-    private Button btnLogout;
-
-    // Labels de résumé
-    @FXML
-    private Label lblVehicules;
-
-    @FXML
-    private Label lblReservations;
-
-    @FXML
-    private Label lblUsers;
+    @FXML private Label lblVehicules;
+    @FXML private Label lblReservations;
+    @FXML private Label lblUsers;
 
     @FXML
     public void initialize() {
-        // Valeurs statiques pour le moment
-        lblVehicules.setText("12");
-        lblReservations.setText("5");
-        lblUsers.setText("20");
+        // Ces valeurs seront chargées via un service plus tard
+        lblVehicules.setText("0");
+        lblReservations.setText("0");
+        lblUsers.setText("0");
 
-        // Gestion des clics sur les boutons
-        btnVehicules.setOnAction(event -> openVehicules());
-        btnReservations.setOnAction(event -> openReservations());
-        btnUsers.setOnAction(event -> openUsers());
-        btnLogout.setOnAction(event -> logout());
+        btnVehicules.setOnAction(e -> openVehicules());
+        btnReservations.setOnAction(e -> openReservations());
+        btnUsers.setOnAction(e -> openUsers());
+        btnLogout.setOnAction(e -> logout());
     }
 
-    // Méthodes de navigation
     private void openVehicules() {
-        System.out.println("Navigation vers Véhicules");
+        System.out.println("➡ Navigation vers la gestion des véhicules");
     }
 
     private void openReservations() {
-        System.out.println("Navigation vers Réservations");
+        System.out.println("➡ Navigation vers la gestion des réservations");
     }
 
     private void openUsers() {
-        System.out.println("Navigation vers Utilisateurs");
+        System.out.println("➡ Navigation vers la gestion des utilisateurs");
     }
 
     private void logout() {
-        System.out.println("Déconnexion...");
-
+        System.out.println("➡ Déconnexion...");
     }
 }

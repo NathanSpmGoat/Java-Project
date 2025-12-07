@@ -12,9 +12,6 @@ public class RegisterController {
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmPasswordField;
 
-    /**
-     * Méthode appelée quand l'utilisateur clique sur "Créer un compte"
-     */
     @FXML
     private void handleCreateAccount() {
 
@@ -24,20 +21,12 @@ public class RegisterController {
         String pass = passwordField.getText();
         String confirm = confirmPasswordField.getText();
 
-        System.out.println("➡ Données récupérées depuis la vue Register :");
-        System.out.println("Nom : " + nom);
-        System.out.println("Prénom : " + prenom);
-        System.out.println("Email : " + email);
-
+        // vérification + UserService.register(...)
+        System.out.println("Création de compte : " + nom + " " + prenom + " (" + email + ")");
     }
 
-    /**
-     * Retour vers la page de connexion
-     */
     @FXML
     private void goToLogin() {
-        System.out.println("➡ Navigation vers la page Login (à implémenter plus tard)");
-
-        // Plus tard : Charger login.fxml
+        System.out.println("➡ Retour à Login.fxml");
     }
 }

@@ -3,12 +3,8 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
-import javafx.scene.control.TableCell;
 import model.entities.Reservation;
 import model.entities.Utilisateur;
 import model.entities.Vehicule;
@@ -18,160 +14,88 @@ import java.time.format.DateTimeFormatter;
 
 public class ReservationController {
 
-    @FXML
-    private TableView<Reservation> tableReservations;
+    @FXML private TableView<Reservation> tableReservations;
 
-    @FXML
-    private TableColumn<Reservation, Integer> colId;
+    @FXML private TableColumn<Reservation, Integer> colId;
+    @FXML private TableColumn<Reservation, Utilisateur> colUtilisateur;
+    @FXML private TableColumn<Reservation, Vehicule> colVehicule;
+    @FXML private TableColumn<Reservation, LocalDateTime> colDateDebut;
+    @FXML private TableColumn<Reservation, LocalDateTime> colDateFin;
+    @FXML private TableColumn<Reservation, String> colStatus;
+    @FXML private TableColumn<Reservation, Double> colMontant;
 
-    @FXML
-    private TableColumn<Reservation, Utilisateur> colUtilisateur;
-
-    @FXML
-    private TableColumn<Reservation, Vehicule> colVehicule;
-
-    @FXML
-    private TableColumn<Reservation, LocalDateTime> colDateDebut;
-
-    @FXML
-    private TableColumn<Reservation, LocalDateTime> colDateFin;
-
-    @FXML
-    private TableColumn<Reservation, String> colStatus;
-
-    @FXML
-    private TableColumn<Reservation, Double> colMontant;
-
-    @FXML
-    private Button btnAjouter;
-
-    @FXML
-    private Button btnModifier;
-
-    @FXML
-    private Button btnSupprimer;
+    @FXML private Button btnAjouter;
+    @FXML private Button btnModifier;
+    @FXML private Button btnSupprimer;
 
     private ObservableList<Reservation> reservationsList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Configurer les colonnes
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        // Colonnes objets : afficher des attributs des objets
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colMontant.setCellValueFactory(new PropertyValueFactory<>("montantTotal"));
+
         colUtilisateur.setCellValueFactory(new PropertyValueFactory<>("utilisateur"));
-        colUtilisateur.setCellFactory(column -> new TableCell<>() {
+        colUtilisateur.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(Utilisateur item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.getNom() + " " + item.getPrenom());
+            protected void updateItem(Utilisateur user, boolean empty) {
+                super.updateItem(user, empty);
+                setText((empty || user == null) ? "" : user.getNom() + " " + user.getPrenom());
             }
         });
 
         colVehicule.setCellValueFactory(new PropertyValueFactory<>("vehicule"));
-        colVehicule.setCellFactory(column -> new TableCell<>() {
+        colVehicule.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(Vehicule item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.getMarque() + " " + item.getModele());
+            protected void updateItem(Vehicule v, boolean empty) {
+                super.updateItem(v, empty);
+                setText((empty || v == null) ? "" : v.getMarque() + " " + v.getModele());
             }
         });
 
-        // Colonnes LocalDateTime formatées
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
         colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
-        colDateDebut.setCellFactory(column -> new TableCell<>() {
+        colDateDebut.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.format(formatter));
+            protected void updateItem(LocalDateTime d, boolean empty) {
+                super.updateItem(d, empty);
+                setText((empty || d == null) ? "" : d.format(format));
             }
         });
 
         colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
-        colDateFin.setCellFactory(column -> new TableCell<>() {
+        colDateFin.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.format(formatter));
+            protected void updateItem(LocalDateTime d, boolean empty) {
+                super.updateItem(d, empty);
+                setText((empty || d == null) ? "" : d.format(format));
             }
         });
 
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        colMontant.setCellValueFactory(new PropertyValueFactory<>("montantTotal"));
-
-        // Ajouter des données fictives
-        initData();
-
         tableReservations.setItems(reservationsList);
 
-        // Boutons
         btnAjouter.setOnAction(e -> ajouterReservation());
         btnModifier.setOnAction(e -> modifierReservation());
         btnSupprimer.setOnAction(e -> supprimerReservation());
     }
 
-    private void initData() {
-        // Utilisateurs
-        Utilisateur user1 = new Utilisateur();
-        user1.setId(1);
-        user1.setNom("Alice");
-        user1.setPrenom("Dupont");
-
-        Utilisateur user2 = new Utilisateur();
-        user2.setId(2);
-        user2.setNom("Bob");
-        user2.setPrenom("Martin");
-
-        // Véhicules
-        Vehicule veh1 = new Vehicule();
-        veh1.setId(1);
-        veh1.setMarque("Toyota");
-        veh1.setModele("Corolla");
-
-        Vehicule veh2 = new Vehicule();
-        veh2.setId(2);
-        veh2.setMarque("Renault");
-        veh2.setModele("Clio");
-
-        // Réservations
-        Reservation res1 = new Reservation();
-        res1.setId(1);
-        res1.setUtilisateur(user1);
-        res1.setVehicule(veh1);
-        res1.setDateDebut(LocalDateTime.of(2025, 12, 1, 10, 0));
-        res1.setDateFin(LocalDateTime.of(2025, 12, 5, 10, 0));
-        res1.setStatus("Confirmée");
-        res1.setMontantTotal(250.0);
-
-        Reservation res2 = new Reservation();
-        res2.setId(2);
-        res2.setUtilisateur(user2);
-        res2.setVehicule(veh2);
-        res2.setDateDebut(LocalDateTime.of(2025, 12, 2, 14, 0));
-        res2.setDateFin(LocalDateTime.of(2025, 12, 4, 14, 0));
-        res2.setStatus("En attente");
-        res2.setMontantTotal(120.0);
-
-        reservationsList.addAll(res1, res2);
-    }
-
     private void ajouterReservation() {
-        System.out.println("Ajouter une réservation");
+        System.out.println("Ajouter réservation");
     }
 
     private void modifierReservation() {
-        Reservation selected = tableReservations.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            System.out.println("Modifier la réservation : " + selected.getUtilisateur().getNom());
-        }
+        Reservation r = tableReservations.getSelectionModel().getSelectedItem();
+        if (r != null) System.out.println("Modifier réservation ID : " + r.getId());
     }
 
     private void supprimerReservation() {
-        Reservation selected = tableReservations.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            System.out.println("Supprimer la réservation : " + selected.getUtilisateur().getNom());
-            reservationsList.remove(selected);
+        Reservation r = tableReservations.getSelectionModel().getSelectedItem();
+        if (r != null) {
+            reservationsList.remove(r);
+            System.out.println("Supprimée : " + r.getId());
         }
     }
 }
