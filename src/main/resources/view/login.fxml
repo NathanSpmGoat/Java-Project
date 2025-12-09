@@ -16,7 +16,10 @@
 
             <Button onAction="#handleLogin" prefWidth="150" text="Se connecter" />
 
-            <Hyperlink onAction="#goToRegister" style="-fx-font-size: 12px;" text="Pas encore de compte ? Créer" />
+            <Hyperlink fx:id="registerLink"
+                       onAction="#goToRegister"
+                       style="-fx-font-size: 12px;"
+                       text="Pas encore de compte ? Créer" />
 
         </VBox>
     </children>

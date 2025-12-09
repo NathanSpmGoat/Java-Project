@@ -42,9 +42,11 @@
                     prefWidth="180"
                     onAction="#handleCreateAccount"/>
 
-            <Hyperlink text="Déjà un compte ? Se connecter"
+            <Hyperlink fx:id="loginLink"
+                       text="Déjà un compte ? Se connecter"
                        onAction="#goToLogin"
                        style="-fx-font-size: 12px;"/>
+
 
         </VBox>
     </children>

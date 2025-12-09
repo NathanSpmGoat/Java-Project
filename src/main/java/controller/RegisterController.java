@@ -1,8 +1,10 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import utils.Navigation;
 
 public class RegisterController {
 
@@ -11,6 +13,7 @@ public class RegisterController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmPasswordField;
+    @FXML private Hyperlink loginLink;
 
     @FXML
     private void handleCreateAccount() {
@@ -27,6 +30,7 @@ public class RegisterController {
 
     @FXML
     private void goToLogin() {
+        Navigation.goTo("login.fxml",loginLink);
         System.out.println("➡ Retour à Login.fxml");
     }
 }
