@@ -1,43 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.DashboardController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
 
-    <Label text="Tableau de bord"
-           layoutX="220"
-           layoutY="20"
-           style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+    <Label layoutX="220" layoutY="20" style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Tableau de bord" />
 
 
     <VBox layoutX="20" layoutY="70" spacing="10">
-        <Button text="Dashboard" fx:id="btnDashboard" prefWidth="150"/>
-        <Button text="Véhicules" fx:id="btnVehicules" prefWidth="150"/>
-        <Button text="Réservations" fx:id="btnReservations" prefWidth="150"/>
-        <Button text="Utilisateurs" fx:id="btnUsers" prefWidth="150"/>
-        <Button text="Déconnexion" fx:id="btnLogout" prefWidth="150" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        <Button fx:id="btnDashboard" prefWidth="150" text="Dashboard" />
+        <Button fx:id="btnVehicules" prefWidth="150" text="Véhicules" />
+        <Button fx:id="btnReservations" prefWidth="150" text="Réservations" />
+        <Button fx:id="btnUsers" prefWidth="150" text="Utilisateurs" />
+        <Button fx:id="btnLogout" prefWidth="150" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Déconnexion" />
     </VBox>
 
 
     <HBox layoutX="200" layoutY="70" spacing="20">
         <VBox spacing="5" style="-fx-border-color: #3498db; -fx-border-width: 2; -fx-padding: 10;">
-            <Label text="Véhicules disponibles" style="-fx-font-weight: bold;"/>
-            <Label fx:id="lblVehicules" text="12"/>
+            <Label style="-fx-font-weight: bold;" text="Véhicules disponibles" />
+            <Label fx:id="lblVehicules" text="13" />
         </VBox>
         <VBox spacing="5" style="-fx-border-color: #2ecc71; -fx-border-width: 2; -fx-padding: 10;">
-            <Label text="Réservations actives" style="-fx-font-weight: bold;"/>
-            <Label fx:id="lblReservations" text="5"/>
+            <Label style="-fx-font-weight: bold;" text="Réservations actives" />
+            <Label fx:id="lblReservations" text="5" />
         </VBox>
         <VBox spacing="5" style="-fx-border-color: #f1c40f; -fx-border-width: 2; -fx-padding: 10;">
-            <Label text="Utilisateurs inscrits" style="-fx-font-weight: bold;"/>
-            <Label fx:id="lblUsers" text="20"/>
+            <Label style="-fx-font-weight: bold;" text="Utilisateurs inscrits" />
+            <Label fx:id="lblUsers" text="20" />
         </VBox>
     </HBox>
 
