@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" padding="20"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.ReservationFormController">
+
+    <Label fx:id="lblVehicule" style="-fx-font-size: 18px;"/>
+
+    <HBox spacing="10">
+        <Label text="Date Début :" />
+        <DatePicker fx:id="dateDebut"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Date Fin :" />
+        <DatePicker fx:id="dateFin"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Montant total :" />
+        <Label fx:id="lblTotal" />
+    </HBox>
+
+    <Button text="Confirmer" fx:id="btnConfirmer"/>
+
+</VBox>

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Service pour la logique métier liée aux véhicules.
+ * Service métier des véhicules.
  */
 public class VehiculeService {
 
@@ -26,11 +26,9 @@ public class VehiculeService {
     }
 
     public int addVehicule(Vehicule v) throws SQLException {
-        // vérifier unicité du matricule si tu as une colonne matricule
         if (v.getMarque() == null || v.getModele() == null) {
             throw new IllegalArgumentException("Marque / modèle requis");
         }
-        // si add renvoie id
         return vehiculeDAO.add(v);
     }
 
@@ -39,12 +37,8 @@ public class VehiculeService {
     }
 
     public boolean deleteVehicule(int id) throws SQLException {
-        // Condition de suppression : pas de réservations actives sur ce véhicule
-        int overlaps = reservationDAO.countOverlaps(id, /* période large */ null, null);
-        // NOTE: si countOverlaps ne supporte pas null, tu dois avoir une DAO method checkActiveReservations(vehicleId)
-        if (overlaps > 0) {
-            throw new IllegalStateException("Impossible de supprimer : réservations en cours");
-        }
+        int overlaps = reservationDAO.countOverlaps(id, null, null);
+        if (overlaps > 0) throw new IllegalStateException("Impossible de supprimer : réservations en cours");
         return vehiculeDAO.delete(id);
     }
 
@@ -57,7 +51,7 @@ public class VehiculeService {
     }
 
     public List<Vehicule> getAvailableVehicules() throws SQLException {
-        return vehiculeDAO.findAvailable(); // méthode à implémenter dans VehiculeDAO
+        return vehiculeDAO.findAvailable();
     }
 
     public boolean setEtat(int vehiculeId, String etat) throws SQLException {
