@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeUtilisateurController">
+
+    <top>
+        <HBox spacing="20" style="-fx-padding: 15; -fx-background-color: FF862A;">
+            <Label style="-fx-font-size: 22px; -fx-text-fill: white;" text="Accueil - Véhicules disponibles" />
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tableVehicules" prefHeight="500" prefWidth="900">
+
+            <columns>
+                <TableColumn fx:id="colMarque" prefWidth="150" text="Marque" />
+                <TableColumn fx:id="colModele" prefWidth="150" text="Modèle" />
+                <TableColumn fx:id="colType" prefWidth="120" text="Type" />
+                <TableColumn fx:id="colPrix" prefWidth="120" text="Prix/jour" />
+                <TableColumn fx:id="colEtat" prefWidth="120" text="État" />
+                <TableColumn fx:id="colAction" prefWidth="150" text="Action" />
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>
