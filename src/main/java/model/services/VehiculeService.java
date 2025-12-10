@@ -7,9 +7,6 @@ import model.entities.Vehicule;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Service métier des véhicules.
- */
 public class VehiculeService {
 
     private final VehiculeDAO vehiculeDAO;
@@ -28,6 +25,9 @@ public class VehiculeService {
     public int addVehicule(Vehicule v) throws SQLException {
         if (v.getMarque() == null || v.getModele() == null) {
             throw new IllegalArgumentException("Marque / modèle requis");
+        }
+        if (v.getMatricule() == null || v.getMatricule().isEmpty()) {
+            throw new IllegalArgumentException("Matricule requis");
         }
         return vehiculeDAO.add(v);
     }

@@ -12,16 +12,26 @@ import java.util.List;
  */
 public class UtilisateurDAO {
 
-    // INSERT d'un nouvel utilisateur (retourne id généré si besoin)
+    /**
+     * Ajouter un nouvel utilisateur
+     * @param u l'utilisateur à ajouter
+     * @return l'ID généré ou -1 si erreur
+     * @throws SQLException
+     */
     public int add(Utilisateur u) throws SQLException {
-        String sql = "INSERT INTO utilisateur(nom, prenom, email, mot_de_passe, role) VALUES (?, ?, ?, ?, ?)";
+        // Assurer que le rôle n'est pas null
+        if (u.getRole() == null || u.getRole().isEmpty()) {
+            u.setRole("UTILISATEUR"); // rôle par défaut
+        }
+
+        String sql = "INSERT INTO utilisateur(nom, prenom, email, password, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, u.getNom());
             ps.setString(2, u.getPrenom());
             ps.setString(3, u.getEmail());
-            ps.setString(4, u.getMotDePasse()); // déjà hashé par le service
+            ps.setString(4, u.getMotDePasse()); // hashé si nécessaire
             ps.setString(5, u.getRole());
 
             int affected = ps.executeUpdate();
@@ -34,9 +44,15 @@ public class UtilisateurDAO {
         }
     }
 
-    // Mettre à jour un utilisateur existant
+    /**
+     * Mettre à jour un utilisateur existant
+     */
     public boolean update(Utilisateur u) throws SQLException {
-        String sql = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, mot_de_passe = ?, role = ? WHERE id = ?";
+        if (u.getRole() == null || u.getRole().isEmpty()) {
+            u.setRole("UTILISATEUR");
+        }
+
+        String sql = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, password = ?, role = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -51,7 +67,9 @@ public class UtilisateurDAO {
         }
     }
 
-    // Supprimer un utilisateur par id
+    /**
+     * Supprimer un utilisateur par ID
+     */
     public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM utilisateur WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -61,7 +79,9 @@ public class UtilisateurDAO {
         }
     }
 
-    // Récupérer un utilisateur par id
+    /**
+     * Récupérer un utilisateur par ID
+     */
     public Utilisateur findById(int id) throws SQLException {
         String sql = "SELECT * FROM utilisateur WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -74,7 +94,9 @@ public class UtilisateurDAO {
         }
     }
 
-    // Récupérer un utilisateur par email (utile pour l'authentification)
+    /**
+     * Récupérer un utilisateur par email
+     */
     public Utilisateur findByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM utilisateur WHERE email = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -87,7 +109,9 @@ public class UtilisateurDAO {
         }
     }
 
-    // Lister tous les utilisateurs
+    /**
+     * Lister tous les utilisateurs
+     */
     public List<Utilisateur> getAll() throws SQLException {
         String sql = "SELECT * FROM utilisateur";
         List<Utilisateur> list = new ArrayList<>();
@@ -95,19 +119,23 @@ public class UtilisateurDAO {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) list.add(mapRowToUtilisateur(rs));
+            while (rs.next()) {
+                list.add(mapRowToUtilisateur(rs));
+            }
         }
         return list;
     }
 
-    // Mapper un ResultSet vers Utilisateur
+    /**
+     * Mapper un ResultSet vers un objet Utilisateur
+     */
     private Utilisateur mapRowToUtilisateur(ResultSet rs) throws SQLException {
         Utilisateur u = new Utilisateur();
         u.setId(rs.getInt("id"));
         u.setNom(rs.getString("nom"));
         u.setPrenom(rs.getString("prenom"));
         u.setEmail(rs.getString("email"));
-        u.setMotDePasse(rs.getString("mot_de_passe"));
+        u.setMotDePasse(rs.getString("password")); // correspond à la colonne SQL
         u.setRole(rs.getString("role"));
         return u;
     }

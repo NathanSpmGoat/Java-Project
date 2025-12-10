@@ -3,7 +3,6 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.TableCell;
 import javafx.collections.FXCollections;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -13,6 +12,7 @@ import model.services.VehiculeService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class HomeUtilisateurController {
 
@@ -27,7 +27,7 @@ public class HomeUtilisateurController {
     private final VehiculeService vehiculeService = new VehiculeService();
 
     @FXML
-    public void initialize() throws SQLException {
+    public void initialize() {
         // Configurer les colonnes
         colMarque.setCellValueFactory(new PropertyValueFactory<>("marque"));
         colModele.setCellValueFactory(new PropertyValueFactory<>("modele"));
@@ -38,10 +38,18 @@ public class HomeUtilisateurController {
         // Ajouter bouton "Réserver"
         addReservationButton();
 
-        // Remplir le tableau avec les véhicules disponibles uniquement
-        tableVehicules.setItems(FXCollections.observableArrayList(
-                vehiculeService.getAvailableVehicules()
-        ));
+        // Charger véhicules disponibles
+        try {
+            List<Vehicule> disponibles = vehiculeService.getAvailableVehicules();
+            tableVehicules.setItems(FXCollections.observableArrayList(disponibles));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur base de données");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de récupérer les véhicules disponibles.");
+            alert.showAndWait();
+        }
     }
 
     private void addReservationButton() {
@@ -69,7 +77,7 @@ public class HomeUtilisateurController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/reservation_form.fxml"));
             Scene scene = new Scene(loader.load());
 
-            // Passer le véhicule sélectionné au controller
+            // Passer le véhicule sélectionné
             ReservationFormController controller = loader.getController();
             controller.setVehicule(vehicule);
 
