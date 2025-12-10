@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.ReservationFormController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <VBox spacing="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+
+            <Label fx:id="vehiculeLabel"
+                   text="Réserver le véhicule"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <GridPane hgap="10" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="40"/>
+                    <ColumnConstraints percentWidth="60"/>
+                </columnConstraints>
+
+                <Label text="Date début :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="dateDebutPicker" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Date fin :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="dateFinPicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Nombre de jours :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="joursLabel" text="0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Montant total (€) :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <Label fx:id="montantLabel" text="0.0" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="btnConfirmer" text="Confirmer"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;" prefWidth="120"/>
+                <Button fx:id="btnAnnuler" text="Annuler"
+                        style="-fx-background-color: #c0392b; -fx-text-fill: white;" prefWidth="120"/>
+            </HBox>
+
+        </VBox>
+    </children>
+</AnchorPane>

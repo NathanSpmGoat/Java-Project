@@ -3,6 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import utils.Navigation;
 
 public class DashboardController {
 
@@ -18,30 +19,20 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
-        // Ces valeurs seront chargées via un service plus tard
+        // Valeurs d'exemple
         lblVehicules.setText("0");
         lblReservations.setText("0");
         lblUsers.setText("0");
 
-        btnVehicules.setOnAction(e -> openVehicules());
-        btnReservations.setOnAction(e -> openReservations());
-        btnUsers.setOnAction(e -> openUsers());
-        btnLogout.setOnAction(e -> logout());
+        // Appel générique pour tous les boutons
+        setupNavigation(btnDashboard, "homeUtilisateur.fxml");
+        setupNavigation(btnVehicules, "vehicules.fxml");
+        setupNavigation(btnReservations, "reservations.fxml");
+        setupNavigation(btnUsers, "users.fxml");
+        setupNavigation(btnLogout, "login.fxml");
     }
 
-    private void openVehicules() {
-        System.out.println("➡ Navigation vers la gestion des véhicules");
-    }
-
-    private void openReservations() {
-        System.out.println("➡ Navigation vers la gestion des réservations");
-    }
-
-    private void openUsers() {
-        System.out.println("➡ Navigation vers la gestion des utilisateurs");
-    }
-
-    private void logout() {
-        System.out.println("➡ Déconnexion...");
+    private void setupNavigation(Button button, String fxmlFile) {
+        button.setOnAction(e -> Navigation.goTo(fxmlFile, button));
     }
 }

@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -18,25 +17,12 @@
             <Label text="Créer un compte"
                    style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-            <TextField fx:id="nomField"
-                       promptText="Nom"
-                       prefWidth="250"/>
+            <TextField fx:id="nomField" promptText="Nom" prefWidth="250"/>
+            <TextField fx:id="prenomField" promptText="Prénom" prefWidth="250"/>
+            <TextField fx:id="emailField" promptText="Email" prefWidth="250"/>
 
-            <TextField fx:id="prenomField"
-                       promptText="Prénom"
-                       prefWidth="250"/>
-
-            <TextField fx:id="emailField"
-                       promptText="Email"
-                       prefWidth="250"/>
-
-            <PasswordField fx:id="passwordField"
-                           promptText="Mot de passe"
-                           prefWidth="250"/>
-
-            <PasswordField fx:id="confirmPasswordField"
-                           promptText="Confirmer le mot de passe"
-                           prefWidth="250"/>
+            <PasswordField fx:id="passwordField" promptText="Mot de passe" prefWidth="250"/>
+            <PasswordField fx:id="confirmPasswordField" promptText="Confirmer le mot de passe" prefWidth="250"/>
 
             <Button text="Créer le compte"
                     prefWidth="180"
@@ -46,7 +32,6 @@
                        text="Déjà un compte ? Se connecter"
                        onAction="#goToLogin"
                        style="-fx-font-size: 12px;"/>
-
 
         </VBox>
     </children>

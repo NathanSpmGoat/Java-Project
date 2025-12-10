@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.entities.Reservation;
 import model.entities.Utilisateur;
 import model.entities.Vehicule;
+import utils.Navigation;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

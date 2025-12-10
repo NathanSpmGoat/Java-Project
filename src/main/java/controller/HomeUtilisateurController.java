@@ -5,9 +5,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.TableCell;
 import javafx.collections.FXCollections;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;
 import model.entities.Vehicule;
 import model.services.VehiculeService;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class HomeUtilisateurController {
@@ -24,18 +28,19 @@ public class HomeUtilisateurController {
 
     @FXML
     public void initialize() throws SQLException {
-
+        // Configurer les colonnes
         colMarque.setCellValueFactory(new PropertyValueFactory<>("marque"));
         colModele.setCellValueFactory(new PropertyValueFactory<>("modele"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prixJournalier"));
         colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
+        // Ajouter bouton "Réserver"
         addReservationButton();
 
-        // Remplir tableau
+        // Remplir le tableau avec les véhicules disponibles uniquement
         tableVehicules.setItems(FXCollections.observableArrayList(
-                vehiculeService.getAllVehicules()
+                vehiculeService.getAvailableVehicules()
         ));
     }
 
@@ -50,16 +55,36 @@ public class HomeUtilisateurController {
                     setGraphic(null);
                     return;
                 }
-
                 btn.setOnAction(e -> {
                     Vehicule selected = getTableView().getItems().get(getIndex());
-                    System.out.println("Réservation demandée pour : " + selected.getMarque());
-
-                    // plus tard : ouvrir reservationUtilisateur.fxml
+                    openReservationDialog(selected);
                 });
-
                 setGraphic(btn);
             }
         });
+    }
+
+    private void openReservationDialog(Vehicule vehicule) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/reservation_form.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            // Passer le véhicule sélectionné au controller
+            ReservationFormController controller = loader.getController();
+            controller.setVehicule(vehicule);
+
+            Stage stage = new Stage();
+            stage.setTitle("Réserver : " + vehicule.getMarque() + " " + vehicule.getModele());
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir le formulaire de réservation.");
+            alert.showAndWait();
+        }
     }
 }

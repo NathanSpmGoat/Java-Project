@@ -3,7 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.LoginController">
 
     <children>
         <VBox alignment="CENTER" layoutX="150" layoutY="60" prefHeight="280" prefWidth="300" spacing="15">
@@ -14,7 +17,7 @@
 
             <PasswordField fx:id="passwordField" prefWidth="250" promptText="Mot de passe" />
 
-            <Button onAction="#handleLogin" prefWidth="150" text="Se connecter" />
+            <Button fx:id="btnLogin" onAction="#handleLogin" prefWidth="150" text="Se connecter" />
 
             <Hyperlink fx:id="registerLink"
                        onAction="#goToRegister"
