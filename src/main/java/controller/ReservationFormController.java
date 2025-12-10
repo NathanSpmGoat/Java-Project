@@ -8,6 +8,7 @@ import model.entities.Reservation;
 import model.entities.Vehicule;
 import model.entities.Utilisateur;
 import model.services.ReservationService;
+import model.services.PdfGeneratorService;
 import utils.Session;
 
 import java.sql.SQLException;
@@ -27,7 +28,7 @@ public class ReservationFormController {
     private Vehicule vehicule;
     private final ReservationService reservationService = new ReservationService();
 
-    // Méthode à appeler depuis HomeUtilisateurController
+    // Méthode appelée depuis HomeUtilisateurController
     public void setVehicule(Vehicule v) {
         this.vehicule = v;
         vehiculeLabel.setText("Réserver le véhicule : " + v.getMarque() + " " + v.getModele());
@@ -48,7 +49,7 @@ public class ReservationFormController {
         LocalDate debut = dateDebutPicker.getValue();
         LocalDate fin = dateFinPicker.getValue();
 
-        if (debut != null && fin != null && debut.isBefore(fin) || debut.equals(fin)) {
+        if (debut != null && fin != null && (debut.isBefore(fin) || debut.equals(fin))) {
             long jours = ChronoUnit.DAYS.between(debut, fin);
             if (jours == 0) jours = 1; // minimum 1 jour
             joursLabel.setText(String.valueOf(jours));
@@ -82,8 +83,19 @@ public class ReservationFormController {
             r.setDateFin(fin);
 
             reservationService.reserver(r);
-            showAlert("Succès", "Réservation effectuée !");
+
+            // --------------------------------------------------
+            // Génération du PDF juste après la réservation !
+            // --------------------------------------------------
+            PdfGeneratorService.generateReservationPDF(
+                    r,
+                    Session.getCurrentUser(),
+                    vehicule
+            );
+
+            showAlert("Succès", "Réservation effectuée ! Le PDF a été généré.");
             closeWindow();
+
         } catch (SQLException ex) {
             ex.printStackTrace();
             showAlert("Erreur", "Impossible de créer la réservation : " + ex.getMessage());

@@ -3,6 +3,7 @@ module model.entities {
     requires javafx.fxml;
     requires static lombok;
     requires java.sql;
+    requires itextpdf;
 
     opens model.entities to javafx.fxml;
     opens controller to javafx.fxml;
