@@ -26,6 +26,8 @@
                 <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
                 <TableColumn fx:id="colPrixJournalier" text="Prix/jour (€)" prefWidth="100"/>
                 <TableColumn fx:id="colEtat" text="État" prefWidth="100"/>
+
+                <TableColumn fx:id="colAction" text="Action" prefWidth="100"/>
             </columns>
 
         </TableView>
@@ -33,9 +35,9 @@
         <HBox layoutX="20" layoutY="330" spacing="10">
             <Button fx:id="btnAjouter" text="Ajouter" prefWidth="120"/>
             <Button fx:id="btnModifier" text="Modifier" prefWidth="120"/>
-            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="120" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
-            <Button fx:id="btnBack" text="Retour Dashboard" layoutX="20" layoutY="20"/>
-
+            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="120"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+            <Button fx:id="btnBack" text="Retour Dashboard"/>
         </HBox>
 
     </children>

@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import model.entities.Vehicule;
 import model.services.VehiculeService;
 import utils.Navigation;
@@ -31,7 +30,6 @@ public class VehiculeController {
 
     @FXML
     public void initialize() {
-
         // Liaison colonnes
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colMarque.setCellValueFactory(new PropertyValueFactory<>("marque"));
@@ -41,7 +39,7 @@ public class VehiculeController {
         colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
         // Coloration de la colonne Etat
-        colEtat.setCellFactory(column -> new TableCell<Vehicule, String>() {
+        colEtat.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(String etat, boolean empty) {
                 super.updateItem(etat, empty);
@@ -85,13 +83,22 @@ public class VehiculeController {
                         showAlert("Attention", "Ce véhicule est déjà réservé !");
                         return;
                     }
+
                     try {
+                        // Mise à jour immédiate dans TableView
+                        v.setEtat("RESERVE");
+                        tableVehicules.refresh(); // rafraîchissement immédiat
+
+                        // Mise à jour dans la base de données
                         vehiculeService.setEtat(v.getId(), "RESERVE");
-                        loadVehicules();
+
                         showAlert("Succès", "Véhicule réservé !");
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         showAlert("Erreur", "Impossible de réserver : " + ex.getMessage());
+                        // Revenir à l'état initial en cas d'erreur
+                        v.setEtat("DISPONIBLE");
+                        tableVehicules.refresh();
                     }
                 });
             }
