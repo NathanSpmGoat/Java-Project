@@ -11,13 +11,15 @@
     <children>
         <VBox alignment="CENTER" layoutX="150" layoutY="60" prefHeight="280" prefWidth="300" spacing="15">
 
+
             <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Connexion" />
 
-            <TextField fx:id="usernameField" prefWidth="250" promptText="Identifiant" />
+            <TextField fx:id="emailField" prefWidth="250" promptText="Email" />
 
             <PasswordField fx:id="passwordField" prefWidth="250" promptText="Mot de passe" />
 
             <Button fx:id="btnLogin" onAction="#handleLogin" prefWidth="150" text="Se connecter" />
+
 
             <Hyperlink fx:id="registerLink"
                        onAction="#goToRegister"

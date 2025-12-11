@@ -5,8 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import model.entities.Vehicule;
 import model.services.VehiculeService;
+import utils.Navigation;
 
 public class VehiculeController {
 
@@ -17,10 +19,12 @@ public class VehiculeController {
     @FXML private TableColumn<Vehicule, String> colType;
     @FXML private TableColumn<Vehicule, Double> colPrixJournalier;
     @FXML private TableColumn<Vehicule, String> colEtat;
+    @FXML private TableColumn<Vehicule, Void> colAction; // Colonne bouton Réserver
 
     @FXML private Button btnAjouter;
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
+    @FXML private Button btnBack;
 
     private final VehiculeService vehiculeService = new VehiculeService();
     private final ObservableList<Vehicule> vehiculesList = FXCollections.observableArrayList();
@@ -28,6 +32,7 @@ public class VehiculeController {
     @FXML
     public void initialize() {
 
+        // Liaison colonnes
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colMarque.setCellValueFactory(new PropertyValueFactory<>("marque"));
         colModele.setCellValueFactory(new PropertyValueFactory<>("modele"));
@@ -35,13 +40,74 @@ public class VehiculeController {
         colPrixJournalier.setCellValueFactory(new PropertyValueFactory<>("prixJournalier"));
         colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
+        // Coloration de la colonne Etat
+        colEtat.setCellFactory(column -> new TableCell<Vehicule, String>() {
+            @Override
+            protected void updateItem(String etat, boolean empty) {
+                super.updateItem(etat, empty);
+                if (empty || etat == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(etat);
+                    if ("RESERVE".equalsIgnoreCase(etat)) {
+                        setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+                    } else {
+                        setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white;");
+                    }
+                }
+            }
+        });
+
+        // Colonne bouton "Réserver"
+        addButtonToTable();
+
+        // TableView
         tableVehicules.setItems(vehiculesList);
 
+        // Boutons
         btnAjouter.setOnAction(e -> ajouter());
         btnModifier.setOnAction(e -> modifier());
         btnSupprimer.setOnAction(e -> supprimer());
+        btnBack.setOnAction(e -> Navigation.goTo("dashboard.fxml", btnBack));
 
         loadVehicules();
+    }
+
+    private void addButtonToTable() {
+        colAction.setCellFactory(param -> new TableCell<>() {
+            private final Button btn = new Button("Réserver");
+
+            {
+                btn.setOnAction(event -> {
+                    Vehicule v = getTableView().getItems().get(getIndex());
+                    if (!"DISPONIBLE".equalsIgnoreCase(v.getEtat())) {
+                        showAlert("Attention", "Ce véhicule est déjà réservé !");
+                        return;
+                    }
+                    try {
+                        vehiculeService.setEtat(v.getId(), "RESERVE");
+                        loadVehicules();
+                        showAlert("Succès", "Véhicule réservé !");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        showAlert("Erreur", "Impossible de réserver : " + ex.getMessage());
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Vehicule v = getTableView().getItems().get(getIndex());
+                    btn.setDisable(!"DISPONIBLE".equalsIgnoreCase(v.getEtat()));
+                    setGraphic(btn);
+                }
+            }
+        });
     }
 
     private void loadVehicules() {
@@ -54,7 +120,6 @@ public class VehiculeController {
     }
 
     private void ajouter() {
-        // Ici tu pourrais ouvrir un formulaire pour saisir un nouveau véhicule
         TextInputDialog dialog = new TextInputDialog();
         dialog.setHeaderText("Ajouter un nouveau véhicule");
         dialog.setContentText("Marque, Modèle, Type, Prix/jour, État (séparés par des virgules):");
@@ -72,7 +137,6 @@ public class VehiculeController {
                 int newId = vehiculeService.addVehicule(v);
                 v.setId(newId);
                 vehiculesList.add(v);
-
             } catch (Exception e) {
                 showAlert("Erreur", "Impossible d'ajouter le véhicule : " + e.getMessage());
             }

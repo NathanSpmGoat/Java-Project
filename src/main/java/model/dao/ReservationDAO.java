@@ -9,37 +9,41 @@ import java.util.List;
 
 /**
  * DAO pour la table reservation.
- * - L'entité Reservation utilise LocalDate (date sans heure).
- * - Le DAO utilise java.sql.Date (Date.valueOf(LocalDate)) pour les opérations SQL.
- * - countOverlaps vérifie les chevauchements sur la plage [date_debut, date_fin).
  */
 public class ReservationDAO {
 
     /**
-     * Ajoute une réservation et retourne l'id généré (ou -1 si échec).
+     * Ajoute une réservation et retourne l'id généré (ou -1 en cas d'erreur).
      */
     public int add(Reservation r) throws SQLException {
-        String sql = "INSERT INTO reservation(utilisateur_id, vehicule_id, date_debut, date_fin, statut, montant_total) VALUES (?, ?, ?, ?, ?, ?)";
+
+        // Les noms correspondent à ta table MySQL
+        String sql = "INSERT INTO reservation(utilisateur_id, vehicule_id, dateDebut, dateFin, statut, montantTotal) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
+            // ID utilisateur et véhicule
             ps.setInt(1, r.getUtilisateur().getId());
             ps.setInt(2, r.getVehicule().getId());
 
-            // Utiliser java.sql.Date pour LocalDate (date sans heure)
-            LocalDate dDeb = r.getDateDebut();
-            LocalDate dFin = r.getDateFin();
-            ps.setDate(3, dDeb != null ? Date.valueOf(dDeb) : null);
-            ps.setDate(4, dFin != null ? Date.valueOf(dFin) : null);
+            // Conversion LocalDate -> java.sql.Date
+            ps.setDate(3, Date.valueOf(r.getDateDebut()));
+            ps.setDate(4, Date.valueOf(r.getDateFin()));
 
-            ps.setString(5, r.getStatus());
+            // Statut et montant
+            ps.setString(5, r.getStatut());
             ps.setDouble(6, r.getMontantTotal());
 
             int affected = ps.executeUpdate();
             if (affected == 0) return -1;
+
+            // Récupération clé générée
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) return rs.getInt(1);
             }
+
             return -1;
         }
     }
@@ -48,17 +52,19 @@ public class ReservationDAO {
      * Met à jour une réservation existante.
      */
     public boolean update(Reservation r) throws SQLException {
-        String sql = "UPDATE reservation SET utilisateur_id = ?, vehicule_id = ?, date_debut = ?, date_fin = ?, statut = ?, montant_total = ? WHERE id = ?";
+
+        String sql = "UPDATE reservation SET "
+                + "utilisateur_id=?, vehicule_id=?, dateDebut=?, dateFin=?, statut=?, montantTotal=? "
+                + "WHERE id=?";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, r.getUtilisateur().getId());
             ps.setInt(2, r.getVehicule().getId());
-
-            ps.setDate(3, r.getDateDebut() != null ? Date.valueOf(r.getDateDebut()) : null);
-            ps.setDate(4, r.getDateFin() != null ? Date.valueOf(r.getDateFin()) : null);
-
-            ps.setString(5, r.getStatus());
+            ps.setDate(3, Date.valueOf(r.getDateDebut()));
+            ps.setDate(4, Date.valueOf(r.getDateFin()));
+            ps.setString(5, r.getStatut());
             ps.setDouble(6, r.getMontantTotal());
             ps.setInt(7, r.getId());
 
@@ -67,85 +73,94 @@ public class ReservationDAO {
     }
 
     /**
-     * Supprime une réservation par id.
+     * Supprime une réservation par son ID.
      */
     public boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = "DELETE FROM reservation WHERE id=?";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
     }
 
     /**
-     * Récupère une réservation par id.
-     * Note : ici on ne joint pas Utilisateur/Vehicule ; on ne charge que leur id.
-     * Les services peuvent appeler UtilisateurDAO.findById / VehiculeDAO.findById si besoin.
+     * Recherche une réservation par son ID.
      */
     public Reservation findById(int id) throws SQLException {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = "SELECT * FROM reservation WHERE id=?";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, id);
+
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRowToReservation(rs);
-                return null;
+                return rs.next() ? mapRowToReservation(rs) : null;
             }
         }
     }
 
     /**
-     * Retourne toutes les réservations (mapping simple).
-     * Si tu veux charger les objets Utilisateur/Vehicule, faire des JOIN ou appeler les DAO correspondants.
+     * Retourne toutes les réservations de la base.
      */
     public List<Reservation> getAll() throws SQLException {
-        String sql = "SELECT * FROM reservation";
         List<Reservation> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM reservation";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) list.add(mapRowToReservation(rs));
         }
+
         return list;
     }
 
     /**
-     * Compte le nombre de réservations qui CHEVALENT la période [debut, fin) pour un véhicule donné.
+     * Compte les chevauchements de dates pour un véhicule donné.
      *
-     * Condition de chevauchement (A=[a1,a2), B=[b1,b2)) : a1 < b2 AND b1 < a2
-     * La requête SQL utilise les dates stockées en 'date' (sans heure).
+     * Condition SQL équivalente à :
+     *   existing.start < new.end AND existing.end > new.start
+     *
+     * Ignorer les réservations avec statut = 'annulée'.
      */
     public int countOverlaps(int vehiculeId, LocalDate debut, LocalDate fin) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM reservation " +
-                "WHERE vehicule_id = ? AND statut <> ? " +
-                "AND (date_debut < ? AND date_fin > ?)";
+
+        String sql = "SELECT COUNT(*) FROM reservation "
+                + "WHERE vehicule_id=? AND statut <> ? "
+                + "AND (dateDebut < ? AND dateFin > ?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, vehiculeId);
+            ps.setString(2, "annulée");
 
-            // Standardiser la valeur de statut qui représente une annulation dans la BDD
-            ps.setString(2, "annulée"); // -> si tu préfères, utilise "ANNULEE" sans accent en base
-
-            // existing.date_debut < new.fin  AND existing.date_fin > new.debut
-            ps.setDate(3, Date.valueOf(fin));   // existing.date_debut < new.fin
-            ps.setDate(4, Date.valueOf(debut)); // existing.date_fin > new.debut
+            ps.setDate(3, Date.valueOf(fin));     // existing.dateDebut < new.fin
+            ps.setDate(4, Date.valueOf(debut));   // existing.dateFin > new.debut
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1);
-                return 0;
+                return rs.next() ? rs.getInt(1) : 0;
             }
         }
     }
 
     /**
-     * Mappe ResultSet -> Reservation (charge uniquement les ids des objets liés).
+     * Transforme une ligne SQL en objet Reservation.
+     * Charge uniquement les IDs des objets liés (Utilisateur/Vehicule).
      */
     private Reservation mapRowToReservation(ResultSet rs) throws SQLException {
+
         Reservation r = new Reservation();
+
         r.setId(rs.getInt("id"));
 
-        // On ne charge que l'id pour les entités associées (service/DAO peuvent charger les objets complets)
+        // Charger uniquement les IDs liés
         model.entities.Utilisateur u = new model.entities.Utilisateur();
         u.setId(rs.getInt("utilisateur_id"));
         r.setUtilisateur(u);
@@ -154,13 +169,14 @@ public class ReservationDAO {
         v.setId(rs.getInt("vehicule_id"));
         r.setVehicule(v);
 
-        java.sql.Date sqlDeb = rs.getDate("date_debut");
-        java.sql.Date sqlFin = rs.getDate("date_fin");
-        if (sqlDeb != null) r.setDateDebut(sqlDeb.toLocalDate());
-        if (sqlFin != null) r.setDateFin(sqlFin.toLocalDate());
+        // Conversion SQL Date -> LocalDate
+        r.setDateDebut(rs.getDate("dateDebut").toLocalDate());
+        r.setDateFin(rs.getDate("dateFin").toLocalDate());
 
-        r.setStatus(rs.getString("statut"));
-        r.setMontantTotal(rs.getDouble("montant_total"));
+        // Champs simples
+        r.setStatut(rs.getString("statut"));
+        r.setMontantTotal(rs.getDouble("montantTotal"));
+
         return r;
     }
 }

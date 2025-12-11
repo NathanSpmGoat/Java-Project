@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public boolean updateUser(Utilisateur user) throws SQLException {
-        // Par ex. interdire modification d'email si collision, etc.
+        // interdire modification d'email si collision, etc.
         Utilisateur existing = utilisateurDAO.findByEmail(user.getEmail());
         if (existing != null && existing.getId() != user.getId()) {
             throw new IllegalArgumentException("Email déjà associé à un autre compte");

@@ -15,6 +15,6 @@ public class Reservation {
     private Vehicule vehicule;
     private LocalDate dateDebut;
     private LocalDate dateFin;
-    private String status;
+    private String statut;
     private double montantTotal;
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.entities.Utilisateur;
 import model.services.UserService;
+import utils.Navigation;
 
 public class UserController {
 
@@ -20,6 +21,8 @@ public class UserController {
     @FXML private Button btnAjouter;
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
+    @FXML private Button btnBack;
+
 
     private final UserService userService = new UserService();
     private final ObservableList<Utilisateur> usersList = FXCollections.observableArrayList();
@@ -39,6 +42,8 @@ public class UserController {
         btnAjouter.setOnAction(e -> ajouter());
         btnModifier.setOnAction(e -> modifier());
         btnSupprimer.setOnAction(e -> supprimer());
+        btnBack.setOnAction(e -> Navigation.goTo("dashboard.fxml", btnBack));
+
     }
 
     private void loadUsers() {

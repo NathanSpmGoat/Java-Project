@@ -28,7 +28,9 @@
     <HBox layoutX="20" layoutY="330" spacing="10">
         <Button text="Ajouter" fx:id="btnAjouter" prefWidth="100"/>
         <Button text="Modifier" fx:id="btnModifier" prefWidth="100"/>
-        <Button text="Supprimer" fx:id="btnSupprimer" prefWidth="100"/>
+        <Button text="Supprimer" fx:id="btnSupprimer" prefWidth="100" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        <Button fx:id="btnBack" text="Retour Dashboard" layoutX="20" layoutY="20"/>
+
     </HBox>
 
 </AnchorPane>

@@ -8,7 +8,7 @@ import utils.Navigation;
 
 public class LoginController {
 
-    @FXML private TextField usernameField;
+    @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private Button btnLogin;
     @FXML private Hyperlink registerLink;
@@ -23,14 +23,22 @@ public class LoginController {
 
     @FXML
     private void handleLogin() {
-        String email = usernameField.getText();
-        String password = passwordField.getText();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            showAlert("Erreur", "Veuillez renseigner tous les champs !");
+            return;
+        }
 
         try {
             Utilisateur user = authService.login(email, password);
+
             if (user != null) {
-                if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                    Navigation.goTo("homeAdmin.fxml", btnLogin);
+                String role = user.getRole() != null ? user.getRole().toUpperCase() : "USER";
+
+                if ("ADMIN".equals(role)) {
+                    Navigation.goTo("HomeAdmin.fxml", btnLogin);
                 } else {
                     Navigation.goTo("homeUtilisateur.fxml", btnLogin);
                 }

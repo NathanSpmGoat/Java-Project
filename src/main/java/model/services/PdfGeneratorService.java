@@ -6,16 +6,35 @@ import model.entities.Reservation;
 import model.entities.Utilisateur;
 import model.entities.Vehicule;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
+/**
+ * Service pour générer un PDF de confirmation de réservation.
+ */
 public class PdfGeneratorService {
 
     public static void generateReservationPDF(Reservation r, Utilisateur u, Vehicule v) {
         try {
-            Document doc = new Document();
-            String fileName = "reservation_" + r.getId() + ".pdf";
-            PdfWriter.getInstance(doc, new FileOutputStream(fileName));
+            // Définir le dossier de téléchargement
+            String downloadDir;
 
+            // Vérifie si on est en environnement de développement (IntelliJ)
+            File devDir = new File("src/main/download/");
+            if (!devDir.exists()) {
+                // Crée le dossier s'il n'existe pas
+                devDir.mkdirs();
+            }
+
+            downloadDir = devDir.exists() ? devDir.getPath() + "/" :
+                    System.getProperty("user.home") + "/Downloads/";
+
+            // Nom du fichier PDF
+            String fileName = downloadDir + "reservation_" + r.getId() + ".pdf";
+
+            // Création du document
+            Document doc = new Document();
+            PdfWriter.getInstance(doc, new FileOutputStream(fileName));
             doc.open();
 
             // Titre
@@ -23,13 +42,11 @@ public class PdfGeneratorService {
                     new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD));
             title.setAlignment(Element.ALIGN_CENTER);
             doc.add(title);
-
             doc.add(new Paragraph("\n"));
 
             // Infos utilisateur
             doc.add(new Paragraph("Client : " + u.getNom() + " " + u.getPrenom()));
             doc.add(new Paragraph("Email : " + u.getEmail()));
-
             doc.add(new Paragraph("\n"));
 
             // Infos véhicule
@@ -37,7 +54,6 @@ public class PdfGeneratorService {
             doc.add(new Paragraph(v.getMarque() + " " + v.getModele()));
             doc.add(new Paragraph("Type : " + v.getType()));
             doc.add(new Paragraph("Prix/jour : " + v.getPrixJournalier() + " €"));
-
             doc.add(new Paragraph("\n"));
 
             // Infos réservation

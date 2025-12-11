@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
- * Service pour la logique métier des réservations.
+ * Service regroupant la logique métier des réservations.
  */
 public class ReservationService {
 
@@ -28,38 +28,50 @@ public class ReservationService {
     }
 
     /**
-     * Crée une réservation après vérifications :
-     *  - Dates valides
-     *  - Disponibilité via countOverlaps()
-     *  - Calcul du montant
+     * Crée une réservation en vérifiant:
      */
     public int reserver(Reservation r) throws SQLException {
-        if (r.getDateDebut() == null || r.getDateFin() == null || r.getVehicule() == null || r.getUtilisateur() == null) {
+
+        // Vérifications de base
+        if (r.getDateDebut() == null || r.getDateFin() == null ||
+                r.getVehicule() == null || r.getUtilisateur() == null) {
             throw new IllegalArgumentException("Données de réservation incomplètes");
         }
+
         if (!r.getDateDebut().isBefore(r.getDateFin())) {
             throw new IllegalArgumentException("dateDebut doit être avant dateFin");
         }
 
-        int overlaps = reservationDAO.countOverlaps(r.getVehicule().getId(), r.getDateDebut(), r.getDateFin());
+        // Vérification de disponibilité
+        int overlaps = reservationDAO.countOverlaps(r.getVehicule().getId(),
+                r.getDateDebut(),
+                r.getDateFin());
         if (overlaps > 0) {
             throw new IllegalStateException("Véhicule non disponible sur la période demandée");
         }
 
+        // Calcul du montant total (en jours)
         double prixJour = fetchPrixJournalier(r.getVehicule().getId());
         long jours = ChronoUnit.DAYS.between(r.getDateDebut(), r.getDateFin());
         if (jours <= 0) jours = 1;
         r.setMontantTotal(prixJour * jours);
 
+        //  Statut par défaut (évite NULL dans la base)
+        if (r.getStatut() == null || r.getStatut().isEmpty()) {
+            r.setStatut("confirmée");
+        }
+
+        // Enregistrement BDD
         int newId = reservationDAO.add(r);
 
+        // Mise à jour état véhicule
         vehiculeDAO.updateEtat(r.getVehicule().getId(), "RESERVE");
 
         return newId;
     }
 
     /**
-     * Annule une réservation si elle n'a pas commencé.
+     * Annuler une réservation si elle n'a pas encore commencé.
      */
     public boolean annulerReservation(int reservationId) throws SQLException {
         Reservation r = reservationDAO.findById(reservationId);
@@ -69,7 +81,7 @@ public class ReservationService {
             throw new IllegalStateException("Impossible d'annuler une réservation déjà commencée");
         }
 
-        r.setStatus("annulée");
+        r.setStatut("annulée");
         boolean ok = reservationDAO.update(r);
 
         if (ok) vehiculeDAO.updateEtat(r.getVehicule().getId(), "DISPONIBLE");
@@ -77,13 +89,24 @@ public class ReservationService {
         return ok;
     }
 
+    /**
+     * Modifier une réservation existante avec recalcul du montant.
+     */
     public boolean modifierReservation(Reservation r) throws SQLException {
+
         if (!r.getDateDebut().isBefore(r.getDateFin())) {
             throw new IllegalArgumentException("dateDebut doit être avant dateFin");
         }
 
-        int overlaps = reservationDAO.countOverlaps(r.getVehicule().getId(), r.getDateDebut(), r.getDateFin());
-        if (overlaps > 0) throw new IllegalStateException("Période non disponible");
+        int overlaps = reservationDAO.countOverlaps(
+                r.getVehicule().getId(),
+                r.getDateDebut(),
+                r.getDateFin()
+        );
+
+        if (overlaps > 0) {
+            throw new IllegalStateException("Période non disponible");
+        }
 
         long jours = ChronoUnit.DAYS.between(r.getDateDebut(), r.getDateFin());
         double prixJour = fetchPrixJournalier(r.getVehicule().getId());
@@ -100,6 +123,9 @@ public class ReservationService {
         return reservationDAO.getAll();
     }
 
+    /**
+     * Retourne le prix journalier du véhicule lié à la réservation.
+     */
     private double fetchPrixJournalier(int vehiculeId) throws SQLException {
         Vehicule v = vehiculeDAO.findById(vehiculeId);
         if (v == null) throw new IllegalStateException("Véhicule introuvable");

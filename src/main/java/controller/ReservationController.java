@@ -28,6 +28,7 @@ public class ReservationController {
     @FXML private Button btnAjouter;
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
+    @FXML private Button btnBack;
 
     private ObservableList<Reservation> reservationsList = FXCollections.observableArrayList();
 
@@ -81,6 +82,8 @@ public class ReservationController {
         btnAjouter.setOnAction(e -> ajouterReservation());
         btnModifier.setOnAction(e -> modifierReservation());
         btnSupprimer.setOnAction(e -> supprimerReservation());
+        btnBack.setOnAction(e -> Navigation.goTo("dashboard.fxml", btnBack));
+
     }
 
     private void ajouterReservation() {
