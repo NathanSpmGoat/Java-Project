@@ -8,61 +8,51 @@ import model.entities.Vehicule;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 
-/**
- * Service pour générer un PDF de confirmation de réservation.
- */
 public class PdfGeneratorService {
 
+    private static final String DOWNLOAD_DIR = "src/main/download/";
+
+    // Crée le dossier s'il n'existe pas
+    static {
+        File dir = new File(DOWNLOAD_DIR);
+        if (!dir.exists()) dir.mkdirs();
+    }
+
+    /**
+     * Génère un PDF pour une seule réservation
+     */
     public static void generateReservationPDF(Reservation r, Utilisateur u, Vehicule v) {
         try {
-            // Définir le dossier de téléchargement
-            String downloadDir;
+            String safeName = u.getNom().replaceAll("[^a-zA-Z0-9]", "_").toLowerCase();
+            String fileName = DOWNLOAD_DIR + "reservation_" + safeName + "_" + r.getId() + ".pdf";
 
-            // Vérifie si on est en environnement de développement (IntelliJ)
-            File devDir = new File("src/main/download/");
-            if (!devDir.exists()) {
-                // Crée le dossier s'il n'existe pas
-                devDir.mkdirs();
-            }
-
-            downloadDir = devDir.exists() ? devDir.getPath() + "/" :
-                    System.getProperty("user.home") + "/Downloads/";
-
-            // Nom du fichier PDF
-            String fileName = downloadDir + "reservation_" + r.getId() + ".pdf";
-
-            // Création du document
             Document doc = new Document();
             PdfWriter.getInstance(doc, new FileOutputStream(fileName));
             doc.open();
 
-            // Titre
             Paragraph title = new Paragraph("Confirmation de réservation",
                     new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD));
             title.setAlignment(Element.ALIGN_CENTER);
             doc.add(title);
             doc.add(new Paragraph("\n"));
 
-            // Infos utilisateur
             doc.add(new Paragraph("Client : " + u.getNom() + " " + u.getPrenom()));
             doc.add(new Paragraph("Email : " + u.getEmail()));
             doc.add(new Paragraph("\n"));
 
-            // Infos véhicule
             doc.add(new Paragraph("Véhicule réservé :"));
             doc.add(new Paragraph(v.getMarque() + " " + v.getModele()));
             doc.add(new Paragraph("Type : " + v.getType()));
             doc.add(new Paragraph("Prix/jour : " + v.getPrixJournalier() + " €"));
             doc.add(new Paragraph("\n"));
 
-            // Infos réservation
             doc.add(new Paragraph("Date début : " + r.getDateDebut()));
             doc.add(new Paragraph("Date fin : " + r.getDateFin()));
             doc.add(new Paragraph("Montant total : " + r.getMontantTotal() + " €"));
 
-            doc.add(new Paragraph("\n\n"));
-            doc.add(new Paragraph("Merci pour votre réservation !"));
+            doc.add(new Paragraph("\n\nMerci pour votre réservation !"));
 
             doc.close();
 
@@ -70,6 +60,15 @@ public class PdfGeneratorService {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Génère un PDF pour toutes les réservations
+     */
+    public static void generateAllReservationPDFs(List<Reservation> reservations) {
+        for (Reservation r : reservations) {
+            generateReservationPDF(r, r.getUtilisateur(), r.getVehicule());
         }
     }
 }

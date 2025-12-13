@@ -6,19 +6,17 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.ReservationController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="450.0" prefWidth="600.0"
+            style="-fx-background-color: #f0f2f5;">
 
-    <children>
+    <VBox spacing="25" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
 
         <Label text="Gestion des Réservations"
-               layoutX="180"
-               layoutY="20"
-               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+               style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               alignment="CENTER"/>
 
-        <TableView fx:id="tableReservations"
-                   layoutX="20" layoutY="70"
-                   prefWidth="560" prefHeight="250">
-
+        <TableView fx:id="tableReservations" prefHeight="270" prefWidth="560"
+                   style="-fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #7f8c8d; -fx-border-width: 2 2 2 2; -fx-border-insets: 0;">
             <columns>
                 <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
                 <TableColumn fx:id="colUtilisateur" text="Utilisateur" prefWidth="120"/>
@@ -28,18 +26,20 @@
                 <TableColumn fx:id="colStatus" text="Status" prefWidth="80"/>
                 <TableColumn fx:id="colMontant" text="Montant (€)" prefWidth="90"/>
             </columns>
-
         </TableView>
 
-        <HBox layoutX="20" layoutY="330" spacing="10">
-            <Button text="Ajouter" fx:id="btnAjouter" prefWidth="100"/>
-            <Button text="Modifier" fx:id="btnModifier" prefWidth="100"/>
-            <Button text="Supprimer" fx:id="btnSupprimer" prefWidth="100"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
-            <Button fx:id="btnBack" text="Retour Dashboard" layoutX="20" layoutY="20"/>
-
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnAjouter" text="Ajouter" prefWidth="130"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnModifier" text="Modifier" prefWidth="130"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="130"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnExportPDF" text="Exporter PDF" prefWidth="150"
+                    style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnBack" text="Retour Dashboard" prefWidth="150"
+                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
         </HBox>
 
-    </children>
-
+    </VBox>
 </AnchorPane>

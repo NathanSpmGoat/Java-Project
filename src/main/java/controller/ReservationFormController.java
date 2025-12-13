@@ -9,7 +9,6 @@ import model.entities.Vehicule;
 import model.entities.Utilisateur;
 import model.services.ReservationService;
 import model.services.PdfGeneratorService;
-import utils.Session;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,6 +21,9 @@ public class ReservationFormController {
     @FXML private DatePicker dateFinPicker;
     @FXML private Label joursLabel;
     @FXML private Label montantLabel;
+    @FXML private TextField nomField;
+    @FXML private TextField prenomField;
+    @FXML private TextField emailField;
     @FXML private Button btnConfirmer;
     @FXML private Button btnAnnuler;
 
@@ -75,21 +77,35 @@ public class ReservationFormController {
             return;
         }
 
+        String nom = nomField.getText().trim();
+        String prenom = prenomField.getText().trim();
+        String email = emailField.getText().trim();
+
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty()) {
+            showAlert("Erreur", "Veuillez remplir le nom, prénom et email du bénéficiaire.");
+            return;
+        }
+
         try {
             Reservation r = new Reservation();
             r.setVehicule(vehicule);
-            r.setUtilisateur(Session.getCurrentUser()); // utilisateur connecté
+
+            // Création de l'utilisateur bénéficiaire
+            Utilisateur beneficiaire = new Utilisateur();
+            beneficiaire.setNom(nom);
+            beneficiaire.setPrenom(prenom);
+            beneficiaire.setEmail(email);
+
+            r.setUtilisateur(beneficiaire);
             r.setDateDebut(debut);
             r.setDateFin(fin);
 
             reservationService.reserver(r);
 
-            // --------------------------------------------------
-            // Génération du PDF juste après la réservation !
-            // --------------------------------------------------
+            // Génération PDF pour le bénéficiaire
             PdfGeneratorService.generateReservationPDF(
                     r,
-                    Session.getCurrentUser(),
+                    beneficiaire,
                     vehicule
             );
 
@@ -112,7 +128,7 @@ public class ReservationFormController {
         Stage stage = (Stage) btnAnnuler.getScene().getWindow();
         stage.close();
     }
-
+    /** Alerte simple */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

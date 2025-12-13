@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.HomeAdminController"
-            prefHeight="600" prefWidth="800">
+            prefHeight="600" prefWidth="800"
+            style="-fx-background-color: #f9f9f9;">
 
     <Label text="Accueil Admin"
-           layoutX="320"
-           layoutY="10"
-           style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
-    <Button fx:id="btnLogout" text="Déconnexion"
-            layoutX="680" layoutY="10" prefWidth="100"/>
+           layoutX="300" layoutY="20"
+           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
 
-    <HBox layoutX="50" layoutY="50" spacing="20">
-        <VBox spacing="5" style="-fx-border-color: #3498db; -fx-border-width: 2; -fx-padding: 10;">
+    <Button fx:id="btnProfil" text="Profil"
+            layoutX="600" layoutY="20" prefWidth="100"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
+    <Button fx:id="btnLogout" text="Déconnexion"
+            layoutX="710" layoutY="20" prefWidth="100"
+            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
+
+    <HBox layoutX="50" layoutY="70" spacing="20">
+        <VBox spacing="5" style="-fx-border-color: #3498db; -fx-border-width: 2; -fx-padding: 15; -fx-background-radius: 10;">
             <Label text="Véhicules disponibles" style="-fx-font-weight: bold;"/>
-            <Label fx:id="lblVehicules" text="0"/>
+            <Label fx:id="lblVehicules" text="0" style="-fx-font-size: 16px;"/>
         </VBox>
-        <VBox spacing="5" style="-fx-border-color: #2ecc71; -fx-border-width: 2; -fx-padding: 10;">
+        <VBox spacing="5" style="-fx-border-color: #2ecc71; -fx-border-width: 2; -fx-padding: 15; -fx-background-radius: 10;">
             <Label text="Réservations actives" style="-fx-font-weight: bold;"/>
-            <Label fx:id="lblReservations" text="0"/>
+            <Label fx:id="lblReservations" text="0" style="-fx-font-size: 16px;"/>
         </VBox>
-        <VBox spacing="5" style="-fx-border-color: #f1c40f; -fx-border-width: 2; -fx-padding: 10;">
+        <VBox spacing="5" style="-fx-border-color: #f1c40f; -fx-border-width: 2; -fx-padding: 15; -fx-background-radius: 10;">
             <Label text="Utilisateurs inscrits" style="-fx-font-weight: bold;"/>
-            <Label fx:id="lblUsers" text="0"/>
+            <Label fx:id="lblUsers" text="0" style="-fx-font-size: 16px;"/>
         </VBox>
     </HBox>
 
-    <TableView fx:id="tableVehicules" layoutX="50" layoutY="150" prefWidth="700" prefHeight="350">
+    <TableView fx:id="tableVehicules" layoutX="50" layoutY="170" prefWidth="700" prefHeight="350"
+               style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ddd;">
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
             <TableColumn fx:id="colMarque" text="Marque" prefWidth="120"/>
@@ -41,8 +47,11 @@
         </columns>
     </TableView>
 
-    <HBox layoutX="50" layoutY="520" spacing="10">
-        <Button fx:id="btnAjouter" text="Ajouter Véhicule" prefWidth="150"/>
-        <Button fx:id="btnBack" text="Dashboard" prefWidth="150"/>
+    <HBox layoutX="50" layoutY="540" spacing="20">
+        <Button fx:id="btnAjouter" text="Ajouter Véhicule" prefWidth="180"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
+        <Button fx:id="btnBack" text="Dashboard" prefWidth="180"
+                style="-fx-background-color: #f27935; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
     </HBox>
+
 </AnchorPane>

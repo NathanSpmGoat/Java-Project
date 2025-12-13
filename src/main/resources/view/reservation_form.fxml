@@ -7,41 +7,56 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.ReservationFormController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="500.0" prefWidth="600.0"
+            style="-fx-background-color: #f0f2f5;">
 
-    <children>
-        <VBox spacing="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+    <VBox alignment="CENTER" spacing="25"
+          layoutX="50" layoutY="20"
+          prefWidth="500"
+          style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 12, 0, 0, 6);">
 
-            <Label fx:id="vehiculeLabel"
-                   text="Réserver le véhicule"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <Label fx:id="vehiculeLabel"
+               text="Réserver le véhicule"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
 
-            <GridPane hgap="10" vgap="15">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="40"/>
-                    <ColumnConstraints percentWidth="60"/>
-                </columnConstraints>
+        <GridPane hgap="15" vgap="15" prefWidth="400">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="40"/>
+                <ColumnConstraints percentWidth="60"/>
+            </columnConstraints>
 
-                <Label text="Date début :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <DatePicker fx:id="dateDebutPicker" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Date début :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dateDebutPicker" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
 
-                <Label text="Date fin :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <DatePicker fx:id="dateFinPicker" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Date fin :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dateFinPicker" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
 
-                <Label text="Nombre de jours :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <Label fx:id="joursLabel" text="0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Nombre de jours :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="joursLabel" text="0" style="-fx-background-color: #ecf0f1; -fx-padding: 8; -fx-background-radius: 6;" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                <Label text="Montant total (€) :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <Label fx:id="montantLabel" text="0.0" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-            </GridPane>
+            <Label text="Montant total (€) :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="montantLabel" text="0.0" style="-fx-background-color: #ecf0f1; -fx-padding: 8; -fx-background-radius: 6;" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-            <HBox spacing="20" alignment="CENTER">
-                <Button fx:id="btnConfirmer" text="Confirmer"
-                        style="-fx-background-color: #27ae60; -fx-text-fill: white;" prefWidth="120"/>
-                <Button fx:id="btnAnnuler" text="Annuler"
-                        style="-fx-background-color: #c0392b; -fx-text-fill: white;" prefWidth="120"/>
-            </HBox>
+            <Label text="Nom :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="nomField" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="200"
+                       style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-padding: 8; -fx-border-color: #cccccc;"/>
 
-        </VBox>
-    </children>
+            <Label text="Prénom :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="prenomField" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="200"
+                       style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-padding: 8; -fx-border-color: #cccccc;"/>
+
+            <Label text="Email :" style="-fx-font-weight: bold; -fx-text-fill: #555555;" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="emailField" GridPane.rowIndex="6" GridPane.columnIndex="1" prefWidth="200"
+                       style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-padding: 8; -fx-border-color: #cccccc;"/>
+
+        </GridPane>
+
+        <HBox spacing="25" alignment="CENTER">
+            <Button fx:id="btnConfirmer" text="Confirmer" prefWidth="140"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnAnnuler" text="Annuler" prefWidth="140"
+                    style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
+        </HBox>
+
+    </VBox>
 </AnchorPane>

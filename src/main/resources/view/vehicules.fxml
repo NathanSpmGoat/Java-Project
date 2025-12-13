@@ -6,40 +6,39 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.VehiculeController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="450.0" prefWidth="600.0"
+            style="-fx-background-color: #f0f2f5;">
 
-    <children>
+    <VBox spacing="25" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
 
         <Label text="Gestion des Véhicules"
-               layoutX="200"
-               layoutY="20"
-               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+               style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               alignment="CENTER"/>
 
-        <TableView fx:id="tableVehicules"
-                   layoutX="20" layoutY="70"
-                   prefWidth="560" prefHeight="250">
-
+        <TableView fx:id="tableVehicules" prefHeight="270" prefWidth="560"
+                   style="-fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #7f8c8d; -fx-border-width: 2;">
             <columns>
                 <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
                 <TableColumn fx:id="colMarque" text="Marque" prefWidth="120"/>
                 <TableColumn fx:id="colModele" text="Modèle" prefWidth="120"/>
+                <TableColumn fx:id="colMatricule" text="Matricule" prefWidth="120"/>
                 <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
                 <TableColumn fx:id="colPrixJournalier" text="Prix/jour (€)" prefWidth="100"/>
                 <TableColumn fx:id="colEtat" text="État" prefWidth="100"/>
-
                 <TableColumn fx:id="colAction" text="Action" prefWidth="100"/>
             </columns>
-
         </TableView>
 
-        <HBox layoutX="20" layoutY="330" spacing="10">
-            <Button fx:id="btnAjouter" text="Ajouter" prefWidth="120"/>
-            <Button fx:id="btnModifier" text="Modifier" prefWidth="120"/>
-            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="120"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
-            <Button fx:id="btnBack" text="Retour Dashboard"/>
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnAjouter" text="Ajouter" prefWidth="130"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnModifier" text="Modifier" prefWidth="130"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" prefWidth="130"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
+            <Button fx:id="btnBack" text="Retour Dashboard" prefWidth="150"
+                    style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;"/>
         </HBox>
 
-    </children>
-
+    </VBox>
 </AnchorPane>

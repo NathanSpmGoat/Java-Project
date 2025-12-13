@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.AddVehiculeController"
+            prefHeight="350.0" prefWidth="500.0"
+            style="-fx-background-color: #f9f9f9;">
+
+    <VBox alignment="CENTER" spacing="15" layoutX="20" layoutY="20"
+          prefWidth="460" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 3);">
+
+        <Label text="Ajouter un véhicule"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+
+        <TextField fx:id="txtMarque" promptText="Marque" prefWidth="400"
+                   style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #cccccc; -fx-padding: 8;" />
+        <TextField fx:id="txtModele" promptText="Modèle" prefWidth="400"
+                   style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #cccccc; -fx-padding: 8;" />
+        <TextField fx:id="txtMatricule" promptText="Matricule" prefWidth="400"
+                   style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #cccccc; -fx-padding: 8;" />
+        <TextField fx:id="txtType" promptText="Type (SUV, Berline, etc.)" prefWidth="400"
+                   style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #cccccc; -fx-padding: 8;" />
+        <TextField fx:id="txtPrix" promptText="Prix journalier" prefWidth="400"
+                   style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #cccccc; -fx-padding: 8;" />
+
+        <ComboBox fx:id="comboEtat" promptText="État du véhicule" prefWidth="400"
+                  style="-fx-background-radius: 6; -fx-border-radius: 6; -fx-border-color: #cccccc; -fx-padding: 8;" />
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnAjouter" text="Ajouter" prefWidth="150"
+                    style="-fx-background-color: #f27935; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
+            <Button fx:id="btnAnnuler" text="Annuler" prefWidth="150"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;" />
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>

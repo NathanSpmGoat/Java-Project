@@ -18,7 +18,7 @@ public class DashboardController {
     @FXML private Button btnVehicules;
     @FXML private Button btnReservations;
     @FXML private Button btnUsers;
-    @FXML private Button btnLogout;
+
 
     // --- Labels pour afficher les compteurs ---
     @FXML private Label lblVehicules;
@@ -40,7 +40,6 @@ public class DashboardController {
         setupNavigation(btnVehicules, "vehicules.fxml");
         setupNavigation(btnReservations, "reservations.fxml");
         setupNavigation(btnUsers, "users.fxml");
-        setupNavigation(btnLogout, "login.fxml");
         setupNavigation(btnHomeAdmin, "homeAdmin.fxml");
     }
 

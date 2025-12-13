@@ -5,27 +5,34 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.HomeUtilisateurController">
+            fx:controller="controller.HomeUtilisateurController"
+            style="-fx-background-color: #f9f9f9;">
 
     <top>
-        <HBox spacing="20" style="-fx-padding: 15; -fx-background-color: #2C3E50;">
-            <Label text="Accueil - Véhicules disponibles"
-                   style="-fx-font-size: 22px; -fx-text-fill: white;"/>
+        <HBox spacing="20" style="-fx-padding: 15; -fx-background-color: #2C3E50; -fx-alignment: center-left;">
+            <Label text="Accueil"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnProfil" text="Profil"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"/>
+            <Button fx:id="btnLogout" text="Déconnexion"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;"
+                    onAction="#handleLogout"/>
         </HBox>
     </top>
 
     <center>
-        <TableView fx:id="tableVehicules" prefWidth="900" prefHeight="500">
-
+        <TableView fx:id="tableVehicules" prefWidth="900" prefHeight="500"
+                   style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ddd;">
             <columns>
                 <TableColumn fx:id="colMarque" text="Marque" prefWidth="150"/>
                 <TableColumn fx:id="colModele" text="Modèle" prefWidth="150"/>
+                <TableColumn fx:id="colMatricule" text="Matricule" prefWidth="150"/>
                 <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
                 <TableColumn fx:id="colPrix" text="Prix/jour" prefWidth="120"/>
                 <TableColumn fx:id="colEtat" text="État" prefWidth="120"/>
                 <TableColumn fx:id="colAction" text="Action" prefWidth="150"/>
             </columns>
-
         </TableView>
     </center>
 

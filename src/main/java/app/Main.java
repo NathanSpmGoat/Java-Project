@@ -19,7 +19,7 @@ public class Main extends Application {
         );
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Connexion");
+        primaryStage.setTitle("DriveNow");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

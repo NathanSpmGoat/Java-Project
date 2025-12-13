@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.ProfilController"
+            prefHeight="480.0" prefWidth="600.0"
+            style="-fx-background-color: #f5f6fa;">
+
+    <VBox alignment="CENTER" spacing="25"
+          layoutX="120" layoutY="20"
+          prefWidth="360"
+          style="-fx-background-color: white;
+                 -fx-padding: 35;
+                 -fx-background-radius: 14;
+                 -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 14, 0, 0, 6);">
+
+        <Label text="Mon profil"
+               style="-fx-font-size: 26px;
+                      -fx-font-weight: bold;
+                      -fx-text-fill: #2c3e50;"/>
+
+        <VBox spacing="12" prefWidth="300">
+
+            <Label text="Nom" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <TextField fx:id="txtNom" editable="false"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 8;
+                              -fx-padding: 10;"/>
+
+            <Label text="Prénom" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <TextField fx:id="txtPrenom" editable="false"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 8;
+                              -fx-padding: 10;"/>
+
+            <Label text="Email" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <TextField fx:id="txtEmail" editable="false"
+                       style="-fx-background-color: #ecf0f1;
+                              -fx-background-radius: 8;
+                              -fx-padding: 10;"/>
+
+            <Label text="Rôle" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <Label fx:id="lblRole"
+                   style="-fx-background-color: #ecf0f1;
+                          -fx-background-radius: 8;
+                          -fx-padding: 10;
+                          -fx-text-fill: #3498db;
+                          -fx-font-weight: bold;"/>
+        </VBox>
+
+        <Separator prefWidth="280"/>
+
+        <Label text="Changer le mot de passe"
+               style="-fx-font-size: 16px;
+                      -fx-font-weight: bold;
+                      -fx-text-fill: #2c3e50;"/>
+
+        <PasswordField fx:id="txtAncienMotDePasse"
+                       promptText="Ancien mot de passe"
+                       prefWidth="300"
+                       style="-fx-background-radius: 8;
+                              -fx-border-radius: 8;
+                              -fx-padding: 10;
+                              -fx-border-color: #cccccc;"/>
+
+        <PasswordField fx:id="txtNouveauMotDePasse"
+                       promptText="Nouveau mot de passe"
+                       prefWidth="300"
+                       style="-fx-background-radius: 8;
+                              -fx-border-radius: 8;
+                              -fx-padding: 10;
+                              -fx-border-color: #cccccc;"/>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnFermer" text="Fermer" prefWidth="130"
+                    style="-fx-background-color: #e74c3c;
+                           -fx-text-fill: white;
+                           -fx-background-radius: 25;
+                           -fx-font-weight: bold;
+                           -fx-cursor: hand;"/>
+            <Button fx:id="btnEnregistrer" text="Enregistrer" prefWidth="130"
+                    style="-fx-background-color: #2ecc71;
+                           -fx-text-fill: white;
+                           -fx-background-radius: 25;
+                           -fx-font-weight: bold;
+                           -fx-cursor: hand;"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

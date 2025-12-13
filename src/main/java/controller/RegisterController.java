@@ -61,7 +61,7 @@ public class RegisterController {
     private void goToLogin() {
         Navigation.goTo("login.fxml", loginLink);
     }
-
+    /** Alerte simple */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

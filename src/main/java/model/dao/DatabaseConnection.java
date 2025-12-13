@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/location_voiture?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
 
     // Charger explicitement le driver (sécurisé)
     static {

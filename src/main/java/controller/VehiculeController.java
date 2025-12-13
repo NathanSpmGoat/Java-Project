@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.scene.control.TableRow;
 import model.entities.Vehicule;
 import model.services.VehiculeService;
 import utils.Navigation;
@@ -15,10 +17,11 @@ public class VehiculeController {
     @FXML private TableColumn<Vehicule, Integer> colId;
     @FXML private TableColumn<Vehicule, String> colMarque;
     @FXML private TableColumn<Vehicule, String> colModele;
+    @FXML private TableColumn<Vehicule, String> colMatricule;
     @FXML private TableColumn<Vehicule, String> colType;
     @FXML private TableColumn<Vehicule, Double> colPrixJournalier;
     @FXML private TableColumn<Vehicule, String> colEtat;
-    @FXML private TableColumn<Vehicule, Void> colAction; // Colonne bouton Réserver
+    @FXML private TableColumn<Vehicule, Void> colAction;
 
     @FXML private Button btnAjouter;
     @FXML private Button btnModifier;
@@ -34,11 +37,12 @@ public class VehiculeController {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colMarque.setCellValueFactory(new PropertyValueFactory<>("marque"));
         colModele.setCellValueFactory(new PropertyValueFactory<>("modele"));
+        colMatricule.setCellValueFactory(new PropertyValueFactory<>("matricule"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colPrixJournalier.setCellValueFactory(new PropertyValueFactory<>("prixJournalier"));
         colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
 
-        // Coloration de la colonne Etat
+        // Couleur cellule état
         colEtat.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(String etat, boolean empty) {
@@ -57,15 +61,31 @@ public class VehiculeController {
             }
         });
 
-        // Colonne bouton "Réserver"
+        // Coloration de toute la ligne selon l’état
+        tableVehicules.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(Vehicule item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setStyle("");
+                } else {
+                    if ("RESERVE".equalsIgnoreCase(item.getEtat())) {
+                        setStyle("-fx-background-color: rgba(231,76,60,0.3);");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
+        // Bouton "Réserver"
         addButtonToTable();
 
-        // TableView
         tableVehicules.setItems(vehiculesList);
 
-        // Boutons
-        btnAjouter.setOnAction(e -> ajouter());
-        btnModifier.setOnAction(e -> modifier());
+        // Actions boutons
+        btnAjouter.setOnAction(e -> openAddVehicule());
+        btnModifier.setOnAction(e -> openEditVehicule());
         btnSupprimer.setOnAction(e -> supprimer());
         btnBack.setOnAction(e -> Navigation.goTo("dashboard.fxml", btnBack));
 
@@ -75,7 +95,6 @@ public class VehiculeController {
     private void addButtonToTable() {
         colAction.setCellFactory(param -> new TableCell<>() {
             private final Button btn = new Button("Réserver");
-
             {
                 btn.setOnAction(event -> {
                     Vehicule v = getTableView().getItems().get(getIndex());
@@ -83,22 +102,16 @@ public class VehiculeController {
                         showAlert("Attention", "Ce véhicule est déjà réservé !");
                         return;
                     }
-
                     try {
-                        // Mise à jour immédiate dans TableView
                         v.setEtat("RESERVE");
-                        tableVehicules.refresh(); // rafraîchissement immédiat
-
-                        // Mise à jour dans la base de données
+                        tableVehicules.refresh();
                         vehiculeService.setEtat(v.getId(), "RESERVE");
-
                         showAlert("Succès", "Véhicule réservé !");
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        showAlert("Erreur", "Impossible de réserver : " + ex.getMessage());
-                        // Revenir à l'état initial en cas d'erreur
                         v.setEtat("DISPONIBLE");
                         tableVehicules.refresh();
+                        showAlert("Erreur", "Impossible de réserver : " + ex.getMessage());
                     }
                 });
             }
@@ -106,9 +119,8 @@ public class VehiculeController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
+                if (empty) setGraphic(null);
+                else {
                     Vehicule v = getTableView().getItems().get(getIndex());
                     btn.setDisable(!"DISPONIBLE".equalsIgnoreCase(v.getEtat()));
                     setGraphic(btn);
@@ -126,74 +138,45 @@ public class VehiculeController {
         }
     }
 
-    private void ajouter() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setHeaderText("Ajouter un nouveau véhicule");
-        dialog.setContentText("Marque, Modèle, Type, Prix/jour, État (séparés par des virgules):");
-        dialog.showAndWait().ifPresent(input -> {
-            try {
-                String[] parts = input.split(",");
-                if (parts.length < 5) throw new IllegalArgumentException("Toutes les infos sont requises");
-                Vehicule v = new Vehicule();
-                v.setMarque(parts[0].trim());
-                v.setModele(parts[1].trim());
-                v.setType(parts[2].trim());
-                v.setPrixJournalier(Double.parseDouble(parts[3].trim()));
-                v.setEtat(parts[4].trim());
-
-                int newId = vehiculeService.addVehicule(v);
-                v.setId(newId);
-                vehiculesList.add(v);
-            } catch (Exception e) {
-                showAlert("Erreur", "Impossible d'ajouter le véhicule : " + e.getMessage());
-            }
-        });
+    private void openAddVehicule() {
+        Navigation.openModal("addVehicule.fxml", "Ajouter un véhicule");
+        loadVehicules();
     }
 
-    private void modifier() {
-        Vehicule v = tableVehicules.getSelectionModel().getSelectedItem();
-        if (v != null) {
-            TextInputDialog dialog = new TextInputDialog(v.getMarque() + "," + v.getModele() + "," + v.getType() + "," + v.getPrixJournalier() + "," + v.getEtat());
-            dialog.setHeaderText("Modifier le véhicule");
-            dialog.setContentText("Marque, Modèle, Type, Prix/jour, État (séparés par des virgules):");
-            dialog.showAndWait().ifPresent(input -> {
-                try {
-                    String[] parts = input.split(",");
-                    if (parts.length < 5) throw new IllegalArgumentException("Toutes les infos sont requises");
-                    v.setMarque(parts[0].trim());
-                    v.setModele(parts[1].trim());
-                    v.setType(parts[2].trim());
-                    v.setPrixJournalier(Double.parseDouble(parts[3].trim()));
-                    v.setEtat(parts[4].trim());
-
-                    if (vehiculeService.updateVehicule(v)) {
-                        tableVehicules.refresh();
-                    } else {
-                        showAlert("Erreur", "Impossible de modifier le véhicule");
-                    }
-                } catch (Exception e) {
-                    showAlert("Erreur", "Impossible de modifier le véhicule : " + e.getMessage());
-                }
-            });
-        } else {
+    private void openEditVehicule() {
+        Vehicule selected = tableVehicules.getSelectionModel().getSelectedItem();
+        if (selected == null) {
             showAlert("Attention", "Veuillez sélectionner un véhicule.");
+            return;
         }
+        Navigation.openModalWithData(
+                "editVehicule.fxml",
+                "Modifier un véhicule",
+                (EditVehiculeController controller) -> controller.setVehicule(selected)
+        );
+        loadVehicules();
     }
 
     private void supprimer() {
         Vehicule v = tableVehicules.getSelectionModel().getSelectedItem();
-        if (v != null) {
-            try {
-                if (vehiculeService.deleteVehicule(v.getId())) {
-                    vehiculesList.remove(v);
-                } else {
-                    showAlert("Erreur", "Impossible de supprimer le véhicule");
-                }
-            } catch (Exception e) {
-                showAlert("Erreur", "Impossible de supprimer le véhicule : " + e.getMessage());
-            }
-        } else {
+        if (v == null) {
             showAlert("Attention", "Veuillez sélectionner un véhicule.");
+            return;
+        }
+
+        if ("RESERVE".equalsIgnoreCase(v.getEtat())) {
+            showAlert("Attention", "Impossible de supprimer un véhicule réservé !");
+            return;
+        }
+
+        try {
+            if (vehiculeService.deleteVehicule(v.getId())) {
+                vehiculesList.remove(v);
+            } else {
+                showAlert("Erreur", "Impossible de supprimer.");
+            }
+        } catch (Exception e) {
+            showAlert("Erreur", e.getMessage());
         }
     }
 
