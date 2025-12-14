@@ -23,35 +23,74 @@ public class ReservationService {
         this.utilisateurDAO = new UtilisateurDAO();
     }
 
-    public ReservationService(ReservationDAO reservationDAO, VehiculeDAO vehiculeDAO, UtilisateurDAO utilisateurDAO) {
+    public ReservationService(
+            ReservationDAO reservationDAO,
+            VehiculeDAO vehiculeDAO,
+            UtilisateurDAO utilisateurDAO
+    ) {
         this.reservationDAO = reservationDAO;
         this.vehiculeDAO = vehiculeDAO;
         this.utilisateurDAO = utilisateurDAO;
     }
 
-    /** Crée une réservation */
+    /** Crée une réservation (avec bénéficiaire) */
     public int reserver(Reservation r) throws SQLException {
+
         validateReservation(r);
 
-        int overlaps = reservationDAO.countOverlaps(r.getVehicule().getId(), r.getDateDebut(), r.getDateFin());
-        if (overlaps > 0) throw new IllegalStateException("Véhicule non disponible sur la période demandée");
+        Utilisateur u = r.getUtilisateur();
 
+        // Vérifier si le bénéficiaire existe déjà (email unique)
+        Utilisateur existing = utilisateurDAO.findByEmail(u.getEmail());
+
+        if (existing != null) {
+            r.setUtilisateur(existing);
+        } else {
+            // Création du bénéficiaire
+            u.setRole("BENEFICIAIRE");
+            u.setMotDePasse(null);
+            int userId = utilisateurDAO.add(u);
+            u.setId(userId);
+        }
+
+        // Vérifier disponibilité véhicule
+        int overlaps = reservationDAO.countOverlaps(
+                r.getVehicule().getId(),
+                r.getDateDebut(),
+                r.getDateFin()
+        );
+
+        if (overlaps > 0)
+            throw new IllegalStateException("Véhicule non disponible sur la période demandée");
+
+        // Calcul du montant
         calculMontantTotal(r);
 
-        if (r.getStatut() == null || r.getStatut().isEmpty()) r.setStatut("confirmée");
+        if (r.getStatut() == null || r.getStatut().isEmpty())
+            r.setStatut("confirmée");
 
+        // Insertion réservation
         int newId = reservationDAO.add(r);
 
         vehiculeDAO.updateEtat(r.getVehicule().getId(), "RESERVE");
+
         return newId;
     }
 
     /** Modifier une réservation */
     public boolean modifierReservation(Reservation r) throws SQLException {
+
         validateReservation(r);
 
-        int overlaps = reservationDAO.countOverlapsExcludingId(r.getVehicule().getId(), r.getDateDebut(), r.getDateFin(), r.getId());
-        if (overlaps > 0) throw new IllegalStateException("Période non disponible");
+        int overlaps = reservationDAO.countOverlapsExcludingId(
+                r.getVehicule().getId(),
+                r.getDateDebut(),
+                r.getDateFin(),
+                r.getId()
+        );
+
+        if (overlaps > 0)
+            throw new IllegalStateException("Période non disponible");
 
         calculMontantTotal(r);
         return reservationDAO.update(r);
@@ -59,6 +98,7 @@ public class ReservationService {
 
     /** Annuler une réservation */
     public boolean annulerReservation(int reservationId) throws SQLException {
+
         Reservation r = reservationDAO.findById(reservationId);
         if (r == null) return false;
 
@@ -67,7 +107,9 @@ public class ReservationService {
 
         r.setStatut("annulée");
         boolean ok = reservationDAO.update(r);
-        if (ok) vehiculeDAO.updateEtat(r.getVehicule().getId(), "DISPONIBLE");
+
+        if (ok)
+            vehiculeDAO.updateEtat(r.getVehicule().getId(), "DISPONIBLE");
 
         return ok;
     }
@@ -94,8 +136,11 @@ public class ReservationService {
 
     /** Validation basique */
     private void validateReservation(Reservation r) {
-        if (r.getDateDebut() == null || r.getDateFin() == null ||
-                r.getVehicule() == null || r.getUtilisateur() == null)
+
+        if (r.getDateDebut() == null ||
+                r.getDateFin() == null ||
+                r.getVehicule() == null ||
+                r.getUtilisateur() == null)
             throw new IllegalArgumentException("Données de réservation incomplètes");
 
         if (!r.getDateDebut().isBefore(r.getDateFin()))
@@ -104,16 +149,22 @@ public class ReservationService {
 
     /** Calcule le montant total */
     private void calculMontantTotal(Reservation r) throws SQLException {
+
         double prixJour = fetchPrixJournalier(r.getVehicule().getId());
         long jours = ChronoUnit.DAYS.between(r.getDateDebut(), r.getDateFin());
+
         if (jours <= 0) jours = 1;
+
         r.setMontantTotal(prixJour * jours);
     }
 
     /** Prix journalier */
     private double fetchPrixJournalier(int vehiculeId) throws SQLException {
+
         Vehicule v = vehiculeDAO.findById(vehiculeId);
-        if (v == null) throw new IllegalStateException("Véhicule introuvable");
+        if (v == null)
+            throw new IllegalStateException("Véhicule introuvable");
+
         return v.getPrixJournalier();
     }
 }
