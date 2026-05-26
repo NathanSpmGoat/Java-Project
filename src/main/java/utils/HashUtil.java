@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashUtil {
 
-    // Hash SHA-256 simple (suffisant pour ton projet scolaire)
+    // Hash SHA-256 simple
     public static String hash(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

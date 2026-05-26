@@ -28,13 +28,13 @@ public class AddReservationController {
 
     @FXML
     private void initialize() {
-        // Charger les utilisateurs et véhicules depuis la DB
+        // Charger les véhicules depuis la DB
         try {
-            cmbUtilisateur.setItems(FXCollections.observableArrayList(reservationService.getAllUtilisateurs()));
+            cmbUtilisateur.setItems(FXCollections.observableArrayList()); // utilisateur optionnel
             cmbVehicule.setItems(FXCollections.observableArrayList(reservationService.getAllVehicules()));
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger les utilisateurs ou véhicules.");
+            showAlert("Erreur", "Impossible de charger les véhicules.");
         }
 
         // Actions des boutons
@@ -49,13 +49,14 @@ public class AddReservationController {
         LocalDate debut = dpDateDebut.getValue();
         LocalDate fin = dpDateFin.getValue();
 
-        if (u == null || v == null || debut == null || fin == null) {
-            showAlert("Erreur", "Veuillez remplir tous les champs.");
+        // utilisateur NON obligatoire
+        if (v == null || debut == null || fin == null) {
+            showAlert("Erreur", "Veuillez remplir tous les champs obligatoires.");
             return;
         }
 
         Reservation r = new Reservation();
-        r.setUtilisateur(u);
+        r.setUtilisateur(u); // peut être null
         r.setVehicule(v);
         r.setDateDebut(debut);
         r.setDateFin(fin);
