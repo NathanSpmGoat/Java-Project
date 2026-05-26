@@ -135,7 +135,7 @@ src/main/java
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/votre-compte/Java-Project.git
+git clone https://github.com/Tresor-Bilal-Projects/Java-Project.git
 ```
 
 ### 2. Configurer MySQL
